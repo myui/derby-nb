@@ -55,7 +55,7 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
     private final AtomicBoolean scheduled = new AtomicBoolean(false);
 
     public BackgroundDirtyPageWriter(DaemonService daemon, int queueSize, BufferStatistics stat) {
-        this.queue = new ArrayBlockingQueue<Cacheable>(queueSize);
+        this.queue = new ArrayBlockingQueue<Cacheable>(queueSize);  // new xbird.util.concurrent.collections.BoundedTransferQueue<Cacheable>(queueSize); 
         this.daemonService = daemon;
         this.bufStats = stat;
         // subscribe with the onDemandOnly flag
