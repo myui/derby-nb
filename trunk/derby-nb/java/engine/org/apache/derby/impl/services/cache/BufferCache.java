@@ -43,7 +43,7 @@ abstract class BufferCache {
         if(!isPowerOfTwo(size)) {
             throw new IllegalArgumentException("Not power of two: " + size);
         }
-        this.tbl = new ConcurrentHashMap<Object, BufferFrame>(size, 0.75f, 32);
+        this.tbl = new ConcurrentHashMap<Object, BufferFrame>(size, 0.75f, 32); // new org.cliffc.high_scale_lib.NonBlockingHashMap<Object, BufferFrame>(size);
         this.clockbuf = new GClockBuffer(size);
         this.poolsize = size;
     }
