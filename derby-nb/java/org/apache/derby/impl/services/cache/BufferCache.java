@@ -119,7 +119,7 @@ abstract class BufferCache {
             if(tbl.remove(removed.getKey(), removed)) {
                 final Cacheable removedEntry = removed.getValue();
                 if(removedEntry != null & removedEntry.isDirty()) {
-                    removedEntry.clean(false); // TODO Select a non-dirty page first
+                    removedEntry.clean(false); // refine to select a non-dirty page first.
                 }
             }
         }

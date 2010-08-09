@@ -371,7 +371,7 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
     void purgeEntry(final BufferFrame entry) throws StandardException {
         final Cacheable removedEntry = entry.getValue();
         if(removedEntry != null & removedEntry.isDirty()) {
-            removedEntry.clean(false); // TODO Select a non-dirty page first
+            removedEntry.clean(false); // refine to select a non-dirty page first.
         }
     }
 }
