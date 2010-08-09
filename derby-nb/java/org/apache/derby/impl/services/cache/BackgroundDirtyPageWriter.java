@@ -32,7 +32,9 @@ import org.apache.derby.iapi.services.daemon.Serviceable;
 import org.apache.derby.iapi.services.sanity.SanityManager;
 
 /**
- * 
+ * A background cleaner that {@code NonBlockingCache} can use to clean {@code
+ * Cacheable}s asynchronously in a background instead of synchronously in the
+ * user threads.
  */
 public final class BackgroundDirtyPageWriter implements Serviceable {
 
@@ -51,7 +53,7 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
     private final AtomicBoolean scheduled = new AtomicBoolean(false);
 
     public BackgroundDirtyPageWriter(DaemonService daemon, int queueSize, BufferStatistics stat) {
-        this.queue = new ArrayBlockingQueue<Cacheable>(queueSize);  // new xbird.util.concurrent.collections.BoundedTransferQueue<Cacheable>(queueSize); 
+        this.queue = new ArrayBlockingQueue<Cacheable>(queueSize);  // new BoundedTransferQueue<Cacheable>(queueSize);
         this.daemonService = daemon;
         this.bufStats = stat;
         // subscribe with the onDemandOnly flag

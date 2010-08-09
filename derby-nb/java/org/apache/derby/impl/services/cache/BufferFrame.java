@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.derby.iapi.services.cache.Cacheable;
 
 /**
- * 
+ * Class representing an entry in the cache.
  */
 public final class BufferFrame {
 
