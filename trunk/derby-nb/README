@@ -6,7 +6,7 @@
  The fruit of this project is Nb-GCLOCK; a non-blocking buffer management scheme 
  based on a lock-free variant of the GCLOCK page replacement algorithm.
  
- You can find the detail in the following paper: 
+ Please find the detail in the following paper: 
  Makoto Yui, Jun Miyazaki, Shunsuke Uemura and Hayato Yamana: 
  ``Nb-GCLOCK: A Non-blocking Buffer Management based on the Generalized CLOCK'', pp. 745-756, Proc. ICDE, March 2010.
 
@@ -16,8 +16,7 @@
 
  == Copyright ==
 
-  Copyright (C) 2009-2010 Makoto Yui
-  Copyright (C) 2010 National Institute of Advanced Industrial Science and Technology. 
+  Copyright (C) 2009-2010 National Institute of Advanced Industrial Science and Technology. 
   All rights reserved.
 
  == License == 
