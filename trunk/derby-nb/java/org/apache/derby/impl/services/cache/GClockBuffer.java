@@ -41,7 +41,7 @@ import org.apache.derby.iapi.services.cache.Cacheable;
 public final class GClockBuffer implements ReplacementPolicy {
 
     private final AtomicReferenceArray<BufferFrame> pool;
-    private final AtomicInteger _free;
+    private final AtomicInteger free;
     private final StripedCounter clockhand = new StripedCounter(0);
     private final int size;
     private final int mask;
@@ -50,7 +50,7 @@ public final class GClockBuffer implements ReplacementPolicy {
     
     public GClockBuffer(int size) {
         this.pool = new AtomicReferenceArray<BufferFrame>(size); // new VolatileArray<BufferFrame>(size);
-        this._free = new AtomicInteger(size);
+        this.free = new AtomicInteger(size);
         this.size = size;
         this.mask = size - 1;
     }
@@ -73,11 +73,11 @@ public final class GClockBuffer implements ReplacementPolicy {
 
     public BufferFrame add(final BufferFrame entry) {
         do {
-            final int free = _free.get();
-            if(free == 0) {
+            final int curFree = free.get();
+            if(curFree == 0) {
                 return swap(entry);
             }
-            if(_free.compareAndSet(free, free - 1)) {
+            if(free.compareAndSet(curFree, curFree - 1)) {
                 break;
             }
         } while(true);
