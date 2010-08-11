@@ -28,7 +28,7 @@ import org.apache.derby.iapi.error.StandardException;
 import org.apache.derby.iapi.services.cache.Cacheable;
 
 /**
- * Core operations of non-blocking cache are provided in this abstract class.
+ * Core operations of non-blocking cache are provided in this base class.
  * Derby specific operations are implemented in <code>NonBlockingCache</code>.
  */
 abstract class BufferCache {
