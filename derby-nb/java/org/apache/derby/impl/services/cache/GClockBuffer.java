@@ -104,9 +104,7 @@ public final class GClockBuffer implements ReplacementPolicy {
                 }
                 final Cacheable item = e.getValue();
                 if(item != null && item.isDirty()) {
-                    if(bgWriter.scheduleClean(item)) {
-                    	continue; // first select non-dirty pages for replacement victim
-                    } else {
+                    if(!bgWriter.scheduleClean(item)) {
                     	bgWriter.requestService();
                     }
                 }
