@@ -33,9 +33,9 @@ import org.apache.derby.iapi.services.cache.Cacheable;
  * 
  * See the detail of GCLOCK on the following paper:
  * <pre>
- * Smith, A. J:
- * ``Sequentiality and prefetching in database systems'',
- * ACM Trans. Database Syst. 3, 3, pp.223-247, 1978.
+ * Nicola, V. F., Dan, A., and Dias, D. M: 
+ * ``Analysis of the generalized clock buffer replacement scheme for database transaction processing'', 
+ * SIGMETRICS Perform. Eval. Rev. 20, 1, 35-46, 1992.
  * </pre>
  */
 public final class GClockBuffer implements ReplacementPolicy {
