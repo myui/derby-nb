@@ -368,13 +368,13 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
     public void shutdown() throws StandardException {
         this.stopped = true;
         cleanAll(); // flush dirty pages
-        ageOut(); // sweep non-dirty pages
+        ageOut();   // sweep non-dirty pages
     }
 
     void purgeEntry(final BufferFrame entry) throws StandardException {
         final Cacheable removedEntry = entry.getValue();
         if(removedEntry != null & removedEntry.isDirty()) {
-            removedEntry.clean(false); // refine to select a non-dirty page first.
+            removedEntry.clean(false); // refinable to select a non-dirty page first.
         }
     }
 }
