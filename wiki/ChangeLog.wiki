@@ -1,5 +1,5 @@
 #summary Modification, in the patch, to the original paper
-#labels Phase-Design
+#labels Phase-Design,Featured
 
 = Introduction =
 
