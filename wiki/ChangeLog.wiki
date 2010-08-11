@@ -9,8 +9,7 @@ The derby patch has slightly been modified from the implementation used in the o
 
   * ConcurrentHashMap is used for _tbl_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/BufferCache.java#44 BufferCache], instead of [http://high-scale-lib.cvs.sourceforge.net/viewvc/high-scale-lib/high-scale-lib/org/cliffc/high_scale_lib/NonBlockingHashMap.java org.cliffc.high_scale_lib.NonBlockingHashMap].
 Including [http://high-scale-lib.cvs.sourceforge.net/viewvc/high-scale-lib/high-scale-lib/org/cliffc/high_scale_lib/NonBlockingHashMap.java org.cliffc.high_scale_lib.NonBlockingHashMap] in Derby would not be preferred.
-
-The patch is thus not completely non-blocking, though is almost non-blocking.
+The patch is thus not completely non-blocking, though is *almost non-blocking*.
 
   * ArrayBlockingQueue is used for _queue_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/BackgroundDirtyPageWriter.java#57 BackgroundDirtyPageWriter], instead of [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/collections/BoundedTransferQueue.java BoundedTransferQueue]
 
