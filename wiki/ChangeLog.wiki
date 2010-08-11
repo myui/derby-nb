@@ -7,16 +7,16 @@ The derby patch has slightly been modified from the implementation used in the o
 
 = Details =
 
-  * ConcurrentHashMap is used for _tbl_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/BufferCache.java#44 BufferCache], instead of [http://high-scale-lib.cvs.sourceforge.net/viewvc/high-scale-lib/high-scale-lib/org/cliffc/high_scale_lib/NonBlockingHashMap.java org.cliffc.high_scale_lib.NonBlockingHashMap].
+  * [http://download.oracle.com/javase/6/docs/api/java/util/concurrent/ConcurrentHashMap.html ConcurrentHashMap] is used for _tbl_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/BufferCache.java#44 BufferCache], instead of [http://high-scale-lib.cvs.sourceforge.net/viewvc/high-scale-lib/high-scale-lib/org/cliffc/high_scale_lib/NonBlockingHashMap.java org.cliffc.high_scale_lib.NonBlockingHashMap].
 Including [http://high-scale-lib.cvs.sourceforge.net/viewvc/high-scale-lib/high-scale-lib/org/cliffc/high_scale_lib/NonBlockingHashMap.java org.cliffc.high_scale_lib.NonBlockingHashMap] in Derby would not be preferred.
 The patch is thus not completely non-blocking, though is *almost non-blocking*.
 
-  * ArrayBlockingQueue is used for _queue_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/BackgroundDirtyPageWriter.java#57 BackgroundDirtyPageWriter], instead of [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/collections/BoundedTransferQueue.java BoundedTransferQueue]
+  * [http://download.oracle.com/javase/6/docs/api/java/util/concurrent/ArrayBlockingQueue.html ArrayBlockingQueue] is used for _queue_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/BackgroundDirtyPageWriter.java#57 BackgroundDirtyPageWriter], instead of [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/collections/BoundedTransferQueue.java BoundedTransferQueue]
 
 ArrayBlockingQueue is blocking because it takes an *exclusive* ReentrantLock on each access.
 [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/collections/BoundedTransferQueue.java BoundedTransferQueue] is non-blocking version of a bounded [http://download-llnw.oracle.com/javase/6/docs/api/java/util/concurrent/BlockingQueue.html BlockingQueue].
 The use of [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/collections/BoundedTransferQueue.java BoundedTransferQueue] is omitted in the patch because it depends on JDK's [http://download-llnw.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedTransferQueue.html LinkedTransferQueue].
 
-  * AtomicReferenceArray is used for _pool_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/GClockBuffer.java#52 GClockBuffer], instead of [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/lang/VolatileArray.java VolatileArray]
+  * [http://download.oracle.com/javase/6/docs/api/java/util/concurrent/atomic/AtomicReferenceArray.html AtomicReferenceArray] is used for _pool_ field in [http://code.google.com/p/derby-nb/source/browse/trunk/derby-nb/java/org/apache/derby/impl/services/cache/GClockBuffer.java#52 GClockBuffer], instead of [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/lang/VolatileArray.java VolatileArray]
 
 [http://code.google.com/p/xbird/source/browse/trunk/xbird-open/main/src/java/xbird/util/concurrent/lang/VolatileArray.java VolatileArray] is more efficient than AtomicReferenceArray, but it uses Unsafe APIs of SUN jdk.
