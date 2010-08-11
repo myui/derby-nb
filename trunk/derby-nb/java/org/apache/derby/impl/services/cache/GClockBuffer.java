@@ -30,6 +30,13 @@ import org.apache.derby.iapi.services.cache.Cacheable;
 /**
  * A class managing buffer frames as Generalized CLOCK (GCLOCK).
  * GCLOCK considers `frequency' as well as `recency' of cache accesses.
+ * 
+ * See the detail of GCLOCK on the following paper:
+ * <pre>
+ * Smith, A. J:
+ * ``Sequentiality and prefetching in database systems'',
+ * ACM Trans. Database Syst. 3, 3, pp.223-247, 1978.
+ * </pre>
  */
 public final class GClockBuffer implements ReplacementPolicy {
 
