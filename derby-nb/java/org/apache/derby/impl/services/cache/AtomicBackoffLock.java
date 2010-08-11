@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Test-and-Test-and-Set (TTAS) spinlock with exponential backoff.
  * 
- * See the detail on the following paper:
+ * The detail of TTAS spinlock can be found in the following paper:
  * <pre>
  * Anderson, T. E:
  * ``The Performance of Spin Lock Alternatives for Shared-Memory Multiprocessors'',
