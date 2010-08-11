@@ -35,10 +35,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public final class AtomicBackoffLock {
 
-    private final int _spinsBeforeYield;
-    private final int _spinsBeforeSleep;
-    private final long _initSleepTime;
-
+    private final int spinsBeforeYield;
+    private final int spinsBeforeSleep;
+    private final long initSleepTime;
     private final AtomicBoolean state;
 
     public AtomicBackoffLock() {
@@ -58,9 +57,9 @@ public final class AtomicBackoffLock {
     }
 
     public AtomicBackoffLock(int spinsBeforeYield, int spinsBeforeSleep, long initSleepTime, boolean lock) {
-        this._spinsBeforeSleep = spinsBeforeSleep;
-        this._spinsBeforeYield = spinsBeforeYield;
-        this._initSleepTime = initSleepTime;
+        this.spinsBeforeSleep = spinsBeforeSleep;
+        this.spinsBeforeYield = spinsBeforeYield;
+        this.initSleepTime = initSleepTime;
         this.state = new AtomicBoolean(lock);
     }
 
@@ -69,9 +68,9 @@ public final class AtomicBackoffLock {
     }
 
     public void lock() {
-        final int spinsBeforeYield = _spinsBeforeYield;
-        final int spinsBeforeSleep = _spinsBeforeSleep;
-        long sleepTime = _initSleepTime;
+        final int lspinsBeforeYield = spinsBeforeYield;
+        final int l_spinsBeforeSleep = spinsBeforeSleep;
+        long sleepTime = initSleepTime;
         int spins = 0;
         while(true) {
             if(!state.get()) { // test-and-test-and-set
@@ -79,9 +78,9 @@ public final class AtomicBackoffLock {
                     return;
                 }
             }
-            if(spins < spinsBeforeYield) { // spin phase
+            if(spins < lspinsBeforeYield) { // spin phase
                 ++spins;
-            } else if(spins < spinsBeforeSleep) { // yield phase
+            } else if(spins < l_spinsBeforeSleep) { // yield phase
                 ++spins;
                 Thread.yield();
             } else { // back-off phase
