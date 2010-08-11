@@ -197,7 +197,7 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
             try {
                 lock.lock();
                 cachedItem = slot.getValue();
-                if(cachedItem == null) {// proper double-checked locking
+                if(cachedItem == null) {// double-checked locking
                     Cacheable newItem = holderFactory.newCacheable(this);
                     Cacheable itemWithIdentity = create ? newItem.createIdentity(key, createParameter)
                             : newItem.setIdentity(key);
