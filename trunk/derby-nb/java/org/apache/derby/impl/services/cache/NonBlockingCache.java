@@ -38,7 +38,7 @@ import org.apache.derby.iapi.util.Matchable;
 /**
  * Non-blocking cache implementation based on Nb-GCLOCK.
  * 
- * An implementation of Nb-GCLOCK of the following paper:
+ * The detail of Nb-GCLOCK is described in the following paper:
  * <pre>
  * Makoto Yui, Jun Miyazaki, Shunsuke Uemura and Hayato Yamana: 
  * ``Nb-GCLOCK: A Non-blocking Buffer Management based on the Generalized CLOCK'', 
