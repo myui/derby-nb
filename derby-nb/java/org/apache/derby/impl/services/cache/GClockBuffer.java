@@ -42,7 +42,7 @@ public final class GClockBuffer implements ReplacementPolicy {
     private BackgroundDirtyPageWriter bgWriter = null;
     
     public GClockBuffer(int size) {
-        this.pool = new AtomicReferenceArray<BufferFrame>(size);
+        this.pool = new AtomicReferenceArray<BufferFrame>(size); // new VolatileArray<BufferFrame>(size);
         this._free = new AtomicInteger(size);
         this.size = size;
         this.mask = size - 1;
