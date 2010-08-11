@@ -1,0 +1,9 @@
+Nb-GCLOCK
+
+------------- LoadJDBC Statistics --------------------
+     Start Time = Wed Aug 11 21:49:05 JST 2010
+       End Time = Wed Aug 11 22:19:59 JST 2010
+       Run Time = 1854 Seconds
+    Rows Loaded = 5089307 Rows
+Rows Per Second = 2745 Rows/Sec
+------------------------------------------------------
