@@ -93,7 +93,7 @@ public final class BufferFrame {
         int capa;
         do {
             capa = pin.get();
-            if(capa == -1) {// does not pin when the entry is evicted
+            if(capa == -1) {// do not pin when the entry is evicted
                 return false;
             }
         } while(!pin.compareAndSet(capa, capa + 1));
