@@ -1,6 +1,6 @@
 /*
 
-   Derby - Class org.apache.derby.impl.services.cache.NonBlockingCacheFactory
+   Derby - Class org.apache.derby.impl.services.cache.ConcurrentCacheFactory
 
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -28,19 +28,27 @@ import org.apache.derby.iapi.services.sanity.SanityManager;
 
 /**
  * Factory class which creates cache manager instances based on the
- * <code>NonBlockingCache</code> implementation.
+ * <code>ConcurrentCache</code> implementation.
  */
-public final class NonBlockingCacheFactory implements CacheFactory {
-
-    public NonBlockingCacheFactory() {}
-
-    public CacheManager newCacheManager(CacheableFactory holderFactory, String name, int initialSize, int maximumSize) {
+public class ConcurrentCacheFactory implements CacheFactory {
+    /**
+     * Create a new <code>ConcurrentCache</code> instance.
+     *
+     * @param holderFactory factory which creates <code>Cacheable</code>s
+     * @param name name of the cache
+     * @param initialSize initial capacity of the cache (number of objects)
+     * @param maximumSize maximum size of the cache (number of objects)
+     * @return a <code>ConcurrentCache</code> instance
+     */
+    public CacheManager newCacheManager(CacheableFactory holderFactory,
+                                        String name,
+                                        int initialSize, int maximumSize) {
     	if(SanityManager.DEBUG) {
-			SanityManager.DEBUG("CacheTrace", "NonBlockingCache (name: " + name
+			SanityManager.DEBUG("CacheTrace", "ConcurrentCache (name: " + name
 					+ ", initialSize: " + initialSize + ", initialSize: "
 					+ initialSize + ")");
 		}
-    	return new NonBlockingCache(holderFactory, name, initialSize, maximumSize);
+        return new ConcurrentCache(holderFactory, name,
+                                   initialSize, maximumSize);
     }
-
 }
