@@ -1,0 +1,12 @@
+#summary Modification, in the patch, to the original paper
+#labels Phase-Design
+
+= Introduction =
+
+The derby patch has slightly been modified from the implementation used in the paper.
+
+= Details =
+
+  * ConcurrentHashMap is used for _tbl_ field in BufferCache, instead of org.cliffc.high_scale_lib.NonBlockingHashMap
+  * ArrayBlockingQueue is used for _queue_ field in BackgroundDirtyPageWriter, instead of BoundedTransferQueue
+  * AtomicReferenceArray is used for _pool_ field in GClockBuffer, instead of VolatileArray
