@@ -38,9 +38,12 @@ import org.apache.derby.iapi.util.Matchable;
 /**
  * Non-blocking cache implementation based on Nb-GCLOCK.
  * 
+ * An implementation of Nb-GCLOCK of the following paper:
+ * <pre>
  * Makoto Yui, Jun Miyazaki, Shunsuke Uemura and Hayato Yamana: 
  * ``Nb-GCLOCK: A Non-blocking Buffer Management based on the Generalized CLOCK'', 
  * pp. 745-756, Proc. ICDE, March 2010.
+ * </pre>
  */
 public final class NonBlockingCache extends BufferCache implements CacheManager {
     static final String CacheTrace = SanityManager.DEBUG ? "CacheTrace" : null;

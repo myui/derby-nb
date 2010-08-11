@@ -29,6 +29,7 @@ import org.apache.derby.iapi.services.cache.Cacheable;
 
 /**
  * A class managing buffer frames as GCLOCK.
+ * GCLOCK considers `frequency' as well as `recency' of cache accesses.
  */
 public final class GClockBuffer implements ReplacementPolicy {
 

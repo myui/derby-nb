@@ -24,7 +24,8 @@ package org.apache.derby.impl.services.cache;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A high performance counter in which write operations are striped.
+ * A high performance counter in which (costful) write operations are striped. 
+ * It reduces CPU's write buffer to flush.
  */
 public final class StripedCounter {
 
