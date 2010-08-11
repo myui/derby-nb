@@ -136,13 +136,18 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
             return null;
         }
         final BufferFrame slot = findEntry(key);
+        Cacheable cached = null;
         if(slot != null) {
-            if(stat != null) {
-                stat.hits.increment();
-            }
-            return slot.getValue();
+            cached = slot.getValue();
         }
-        return null;
+        if(stat != null) {
+            if(cached == null) {
+            	stat.misses.increment();               
+            } else {
+            	stat.hits.increment();
+            }            
+        }
+        return cached;
     }
 
     /**

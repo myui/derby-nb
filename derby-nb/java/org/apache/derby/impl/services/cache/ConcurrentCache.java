@@ -332,6 +332,9 @@ final class ConcurrentCache implements CacheManager {
         CacheEntry entry = cache.get(key);
         if (entry == null) {
             // No such object was found in the cache.
+        	if(stat != null) {
+                stat.misses.increment();
+            }
             return null;
         }
         
