@@ -89,7 +89,7 @@ public final class AtomicBackoffLock {
                 } catch (InterruptedException e) {
                     throw new IllegalStateException(e);
                 }
-                sleepTime = (3 * sleepTime) >> 1 + 1; // 50% is arbitrary
+                sleepTime = (3 * sleepTime) >> 1 + 1;
             }
         }
     }
