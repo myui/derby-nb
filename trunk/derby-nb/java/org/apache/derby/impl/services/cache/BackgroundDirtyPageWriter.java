@@ -112,7 +112,7 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
                 }
             } while((entry = queue.poll()) != null);
             if(SanityManager.DEBUG) {
-                SanityManager.DEBUG(NonBlockingCache.CacheTrace, "["
+                SanityManager.DEBUG(NonBlockingCache.CacheTrace, "Thread["
                         + Thread.currentThread().getName() + "] Wrote " + cleaned
                         + " dirty pages to disk");
                 if(bufStats != null) {
