@@ -34,7 +34,7 @@ public final class BufferFrame {
     private final Object key;
     private final AtomicReference<Cacheable> value;
 
-    private final AtomicInteger refcount = new AtomicInteger(1);
+    private final AtomicInteger weight = new AtomicInteger(1);
     private final AtomicInteger pinning = new AtomicInteger(1);
 
     private final AtomicBackoffLock lock = new AtomicBackoffLock(false);
@@ -60,12 +60,12 @@ public final class BufferFrame {
         return value.compareAndSet(null, update);
     }
 
-    public void incrementRefCount() {
-        refcount.getAndIncrement();
+    public void incrementWeight() {
+        weight.getAndIncrement();
     }
 
-    public int decrementRefCount() {
-        return refcount.decrementAndGet();
+    public int decrementWeight() {
+        return weight.decrementAndGet();
     }
 
     public boolean tryEvict() {

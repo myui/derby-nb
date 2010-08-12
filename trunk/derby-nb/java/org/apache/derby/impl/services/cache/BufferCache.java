@@ -49,7 +49,7 @@ abstract class BufferCache {
     final BufferFrame fixEntry(final Object key) throws StandardException {
         final BufferFrame entry = tbl.get(key);
         if(entry != null && entry.pin()) {
-            entry.incrementRefCount();
+            entry.incrementWeight();
             return entry;
         } else {
             return addEntry(key, null);
@@ -71,7 +71,7 @@ abstract class BufferCache {
             if(prevEntry != null) {
                 if(prevEntry.pin()) {
                     newEntry.evictUnshared();
-                    prevEntry.incrementRefCount();
+                    prevEntry.incrementWeight();
                     return prevEntry;
                 }
                 if(tbl.replace(key, prevEntry, newEntry)) {
@@ -90,7 +90,7 @@ abstract class BufferCache {
     final BufferFrame findEntry(final Object key) {
         final BufferFrame entry = tbl.get(key);
         if(entry != null && entry.pin()) {
-            entry.incrementRefCount();
+            entry.incrementWeight();
             return entry;
         }
         return null;

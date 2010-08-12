@@ -123,7 +123,7 @@ public final class GClockBuffer implements ReplacementPolicy {
                 }
                 continue;
             }
-            if(e.decrementRefCount() <= 0) {
+            if(e.decrementWeight() <= 0) {
                 if(e.tryEvict() && pool.compareAndSet(i, e, entry)) {
                     moveClockHand(clockhand, size, i, start);
                     return e;
