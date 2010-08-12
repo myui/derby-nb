@@ -64,8 +64,9 @@ public final class BufferFrame {
         weight.getAndIncrement();
     }
 
-    public int decrementWeight() {
-        return weight.decrementAndGet();
+    public int decrementWeight(int delta) {
+    	assert (delta > 0) : delta;
+        return weight.addAndGet(-delta);
     }
 
     public boolean tryEvict() {

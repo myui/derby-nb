@@ -40,6 +40,7 @@ import org.apache.derby.iapi.services.sanity.SanityManager;
 public final class BackgroundDirtyPageWriter implements Serviceable {
 
     private final BlockingQueue<Cacheable> queue;
+    private final int maxPurgeUnit;
 
     /** The service thread which performs the clean operations. */
     private final DaemonService daemonService;
@@ -48,13 +49,14 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
 
     private final BufferStatistics bufStats;
 
-    /** write dirty pages every 20 seconds by the default. */
-    private long interval = 20000L;
+    /** write dirty pages every 30 seconds by the default. */
+    private long interval = 30000L;
 
     private final AtomicBoolean scheduled = new AtomicBoolean(false);
-
+    
     public BackgroundDirtyPageWriter(DaemonService daemon, int queueSize, BufferStatistics stat) {
-        this.queue = new ArrayBlockingQueue<Cacheable>(queueSize);  // new BoundedTransferQueue<Cacheable>(queueSize);
+        this.queue = new ArrayBlockingQueue<Cacheable>(queueSize); // new BoundedTransferQueue<Cacheable>(queueSize);
+        this.maxPurgeUnit = Math.max(queueSize / 10, 100);
         this.daemonService = daemon;
         this.bufStats = stat;
         // subscribe with the onDemandOnly flag
@@ -78,6 +80,9 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
             // called it and the request hasn't been processed yet. Therefore, we
             // only call serviceNow() if we can atomically change scheduled from
             // false to true. 
+            synchronized(scheduled) {
+                scheduled.notifyAll();
+            }
             daemonService.serviceNow(clientNumber);
         }
     }
@@ -102,9 +107,13 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
                     entry.clean(false);
                     cleaned++;
                 }
+                if(cleaned >= maxPurgeUnit) {
+                    break;
+                }
             } while((entry = queue.poll()) != null);
             if(SanityManager.DEBUG) {
-                SanityManager.DEBUG(NonBlockingCache.CacheTrace, "Wrote " + cleaned
+                SanityManager.DEBUG(NonBlockingCache.CacheTrace, "["
+                        + Thread.currentThread().getName() + "] Wrote " + cleaned
                         + " dirty pages to disk");
                 if(bufStats != null) {
                     SanityManager.DEBUG(NonBlockingCache.CacheTrace, bufStats.getStatistic());
@@ -112,7 +121,7 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
             }
         }
         scheduled.set(false);
-        return sleep(interval) ? Serviceable.REQUEUE : Serviceable.DONE;
+        return sleep(scheduled, interval) ? Serviceable.REQUEUE : Serviceable.DONE;
     }
 
     public boolean serviceASAP() {
@@ -123,9 +132,11 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
         return false;
     }
 
-    private static boolean sleep(final long mills) {
+    private static boolean sleep(final AtomicBoolean sync, final long mills) {
         try {
-            Thread.sleep(mills);
+            synchronized(sync) {
+                sync.wait(mills);
+            }
             return true;
         } catch (InterruptedException e) {
             return false;
