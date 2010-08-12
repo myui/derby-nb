@@ -47,14 +47,14 @@ public final class GClockBuffer implements ReplacementPolicy {
     private final int mask;
 
     private BackgroundDirtyPageWriter bgWriter = null;
-    
+
     public GClockBuffer(int size) {
         this.pool = new AtomicReferenceArray<BufferFrame>(size); // new VolatileArray<BufferFrame>(size);
         this.free = new AtomicInteger(size);
         this.size = size;
         this.mask = size - 1;
     }
-    
+
     public AtomicReferenceArray<BufferFrame> getBufferPool() {
         return pool;
     }
@@ -62,7 +62,7 @@ public final class GClockBuffer implements ReplacementPolicy {
     public void insertEntry(CacheEntry entry) throws StandardException {
         throw new UnsupportedOperationException();
     }
-    
+
     public void setBackgroundWriter(BackgroundDirtyPageWriter bgWriter) {
         this.bgWriter = bgWriter;
     }
@@ -93,37 +93,39 @@ public final class GClockBuffer implements ReplacementPolicy {
         int numPinning = 0;
         final boolean bgWriterExists = (bgWriter != null);
         final int start = clockhand.get();
-        for(int i = start & mask;; i = ((i + 1) & mask)) {
+        for(int i = start & mask, numTry = 1;; i = ((i + 1) & mask)) {
             final BufferFrame e = pool.get(i);
             if(e == null) {
                 continue;
             }
             if(bgWriterExists) {
-                if(i == mask) {// reached clock end
-                    bgWriter.requestService();
-                }
                 final Cacheable item = e.getValue();
                 if(item != null && item.isDirty()) {
-                    if(!bgWriter.scheduleClean(item)) {
-                    	bgWriter.requestService();
+                    if(bgWriter.scheduleClean(item)) {
+                        if(numTry == 1) {
+                            continue; // preferentially select a non-dirty page for a replacement victim.
+                        }
+                    } else {
+                        bgWriter.requestService();
                     }
                 }
             }
             final int pincount = e.getPinCount();
-            if(pincount == -1) {//evicted?
+            if(pincount == -1) {// evicted?
                 if(pool.compareAndSet(i, e, entry)) {
                     moveClockHand(clockhand, size, i, start);
                     return e;
                 }
                 continue;
-            }            
-            if(pincount > 0) {//pinned?
+            }
+            if(pincount > 0) {// pinned?
                 if(++numPinning >= size) {
+                    numTry = Math.min(numTry + 1, 3);
                     Thread.yield();
                 }
                 continue;
             }
-            if(e.decrementWeight() <= 0) {
+            if(e.decrementWeight(numTry) <= 0) {
                 if(e.tryEvict() && pool.compareAndSet(i, e, entry)) {
                     moveClockHand(clockhand, size, i, start);
                     return e;
@@ -133,7 +135,7 @@ public final class GClockBuffer implements ReplacementPolicy {
     }
 
     private static void moveClockHand(final StripedCounter clockhand, final int capacity, final int curr, final int start) {
-        final int delta = (curr < start) ? (curr + capacity - start + 1) : (curr - start + 1);
+        int delta = (curr < start) ? (curr + capacity - start + 1) : (curr - start + 1);
         clockhand.add(delta);
     }
 }

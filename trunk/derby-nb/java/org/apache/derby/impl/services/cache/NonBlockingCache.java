@@ -96,7 +96,7 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
             cleaner.unsubscribe();
         }
         // Create a background cleaner that can queue up 1/10 of the elements
-        // in the cache.
+        // in the cache. Purge unit is 1/10 of the queue.
         this.cleaner = new BackgroundDirtyPageWriter(daemon, Math.max(poolsize / 10, 1), stat);
         clockbuf.setBackgroundWriter(cleaner);
     }
