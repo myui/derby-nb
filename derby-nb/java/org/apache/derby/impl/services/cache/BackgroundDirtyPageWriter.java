@@ -40,7 +40,6 @@ import org.apache.derby.iapi.services.sanity.SanityManager;
 public final class BackgroundDirtyPageWriter implements Serviceable {
 
     private final BlockingQueue<Cacheable> queue;
-    private final int maxPurgeUnit;
 
     /** The service thread which performs the clean operations. */
     private final DaemonService daemonService;
@@ -49,14 +48,13 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
 
     private final BufferStatistics bufStats;
 
-    /** write dirty pages every 30 seconds by the default. */
-    private long interval = 30000L;
+    /** write dirty pages every 20 seconds by the default. */
+    private long interval = 20000L;
 
     private final AtomicBoolean scheduled = new AtomicBoolean(false);
     
     public BackgroundDirtyPageWriter(DaemonService daemon, int queueSize, BufferStatistics stat) {
         this.queue = new ArrayBlockingQueue<Cacheable>(queueSize); // new BoundedTransferQueue<Cacheable>(queueSize);
-        this.maxPurgeUnit = Math.min(Math.max(queueSize / 10, 1), 100);
         this.daemonService = daemon;
         this.bufStats = stat;
         // subscribe with the onDemandOnly flag
@@ -106,9 +104,6 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
                 if(entry.isDirty()) {
                     entry.clean(false);
                     cleaned++;
-                }
-                if(cleaned >= maxPurgeUnit) {
-                    break;
                 }
             } while((entry = queue.poll()) != null);
             if(SanityManager.DEBUG) {
