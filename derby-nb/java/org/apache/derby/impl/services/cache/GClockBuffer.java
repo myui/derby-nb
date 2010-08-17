@@ -98,18 +98,6 @@ public final class GClockBuffer implements ReplacementPolicy {
             if(e == null) {
                 continue;
             }
-            if(bgWriterExists) {
-                final Cacheable item = e.getValue();
-                if(item != null && item.isDirty()) {
-                    if(bgWriter.scheduleClean(item)) {
-                        if(numTry == 1) {
-                            continue; // preferentially select a non-dirty page for a replacement victim.
-                        }
-                    } else {
-                        bgWriter.requestService();
-                    }
-                }
-            }
             final int pincount = e.getPinCount();
             if(pincount == -1) {// evicted?
                 if(pool.compareAndSet(i, e, entry)) {
@@ -124,6 +112,20 @@ public final class GClockBuffer implements ReplacementPolicy {
                     Thread.yield();
                 }
                 continue;
+            }
+            if(bgWriterExists) {
+                final Cacheable item = e.getValue();
+                if(item != null && item.isDirty()) {
+                    if(e.getWeight() <= 2) {// avoid popular pages get written repeatedly
+                        if(!bgWriter.scheduleClean(item)) {
+                            bgWriter.requestService();
+                        }
+                        if(numTry == 1) {
+                            e.decrementWeight(1);
+                            continue; // preferentially select a non-dirty page for a replacement victim.
+                        }
+                    }
+                }
             }
             if(e.decrementWeight(numTry) <= 0) {
                 if(e.tryEvict() && pool.compareAndSet(i, e, entry)) {
