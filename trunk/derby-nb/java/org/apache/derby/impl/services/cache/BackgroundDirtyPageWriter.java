@@ -56,7 +56,7 @@ public final class BackgroundDirtyPageWriter implements Serviceable {
     
     public BackgroundDirtyPageWriter(DaemonService daemon, int queueSize, BufferStatistics stat) {
         this.queue = new ArrayBlockingQueue<Cacheable>(queueSize); // new BoundedTransferQueue<Cacheable>(queueSize);
-        this.maxPurgeUnit = Math.max(queueSize / 10, 100);
+        this.maxPurgeUnit = Math.min(Math.max(queueSize / 10, 1), 100);
         this.daemonService = daemon;
         this.bufStats = stat;
         // subscribe with the onDemandOnly flag

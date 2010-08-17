@@ -60,12 +60,16 @@ public final class BufferFrame {
         return value.compareAndSet(null, update);
     }
 
+    public int getWeight() {
+        return weight.get();
+    }
+
     public void incrementWeight() {
         weight.getAndIncrement();
     }
 
     public int decrementWeight(int delta) {
-    	assert (delta > 0) : delta;
+        assert (delta > 0) : delta;
         return weight.addAndGet(-delta);
     }
 

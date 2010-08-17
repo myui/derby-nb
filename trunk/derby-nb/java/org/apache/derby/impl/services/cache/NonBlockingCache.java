@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import org.apache.derby.iapi.error.StandardException;
-import org.apache.derby.iapi.reference.SQLState;
 import org.apache.derby.iapi.services.cache.CacheManager;
 import org.apache.derby.iapi.services.cache.Cacheable;
 import org.apache.derby.iapi.services.cache.CacheableFactory;
@@ -96,7 +95,7 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
             cleaner.unsubscribe();
         }
         // Create a background cleaner that can queue up 1/10 of the elements
-        // in the cache. Purge unit is 1/10 of the queue.
+        // in the cache. Purge unit is 1/10 of the queue and at max 100 pages.
         this.cleaner = new BackgroundDirtyPageWriter(daemon, Math.max(poolsize / 10, 1), stat);
         clockbuf.setBackgroundWriter(cleaner);
     }
@@ -142,10 +141,10 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
         }
         if(stat != null) {
             if(cached == null) {
-            	stat.misses.increment();               
+                stat.misses.increment();
             } else {
-            	stat.hits.increment();
-            }            
+                stat.hits.increment();
+            }
         }
         return cached;
     }
@@ -373,7 +372,7 @@ public final class NonBlockingCache extends BufferCache implements CacheManager 
     public void shutdown() throws StandardException {
         this.stopped = true;
         cleanAll(); // flush dirty pages
-        ageOut();   // sweep non-dirty pages
+        ageOut(); // sweep non-dirty pages
     }
 
     void purgeEntry(final BufferFrame entry) throws StandardException {
